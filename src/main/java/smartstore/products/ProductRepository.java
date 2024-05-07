@@ -11,10 +11,15 @@ public class ProductRepository {
   private int id = 0;
 
   void addProduct(Product product) {
+    product.setId(id);
     productTable.put(id++, product);
   }
 
   ArrayList<Product> getAllProducts() {
     return new ArrayList<>(productTable.values());
+  }
+
+  Product findProductWithId(int id) {
+    return productTable.get(id);
   }
 }

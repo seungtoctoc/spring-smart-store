@@ -18,4 +18,7 @@ public class ProductService {
     return productRepository.getAllProducts();
   }
 
+  Product findProductWithId(int id) {
+    return productRepository.findProductWithId(id);
+  }
 }

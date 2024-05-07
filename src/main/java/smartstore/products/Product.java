@@ -10,4 +10,5 @@ public class Product {
   private String desc;
   private int price;
   private int sellerId;
+  private int categoryId;
 }

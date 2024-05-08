@@ -11,8 +11,8 @@ public class ProductRepository {
   private int id = 0;
 
   void addProduct(Product product) {
-    product.setId(id);
-    productTable.put(id++, product);
+    product.setId(id++);
+    productTable.put(product.getId(), product);
   }
 
   ArrayList<Product> getAllProducts() {

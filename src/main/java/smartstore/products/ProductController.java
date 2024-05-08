@@ -17,12 +17,17 @@ public class ProductController {
   @PostMapping("/products")
   public void addProduct(@RequestBody Product product) {
     if (!Validator.isEnglish(product.getName())) {
-      System.out.println("name을 확인하세요");
+      System.out.println("name should be english");
       return;
     }
 
-    if(!Validator.isNumber(product.getPrice()) || product.getPrice() < 0) {
-      System.out.println("price를 확인하세요");
+    if (!Validator.isNumber(product.getPrice())) {
+      System.out.println("price should be number");
+      return;
+    }
+
+    if (product.getPrice() < 0) {
+      System.out.println("price should be positive number");
       return;
     }
 
@@ -37,7 +42,7 @@ public class ProductController {
   @GetMapping("/products/{id}")
   public Product findProductWithId(@PathVariable int id) {
     if (!Validator.isNumber(id)) {
-      System.out.println("id is not number");
+      System.out.println("id should be number");
     }
 
     return productService.findProductWithId(id);

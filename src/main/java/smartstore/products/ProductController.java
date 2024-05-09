@@ -1,7 +1,14 @@
 package smartstore.products;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.AllArgsConstructor;
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,36 +22,59 @@ public class ProductController {
   ProductService productService;
 
   @PostMapping("/products")
-  public void addProduct(@RequestBody Product product) {
+  public ResponseEntity addProduct(@RequestBody Product product) {
     if (!Validator.isEnglish(product.getName())) {
-      System.out.println("name should be english");
-      return;
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     if (!Validator.isNumber(product.getPrice())) {
-      System.out.println("price should be number");
-      return;
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     if (product.getPrice() < 0) {
-      System.out.println("price should be positive number");
-      return;
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    productService.addProduct(product);
-  }
+    Product savedProduct = productService.addProduct(product);
 
-  @GetMapping("/products")
-  public ArrayList<Product> getAllProducts() {
-    return productService.getAllProducts();
+    try {
+      System.out.println(savedProduct.getName());
+    }
+    catch(NullPointerException e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @GetMapping("/products/{id}")
-  public Product findProductWithId(@PathVariable int id) {
+  public ResponseEntity<Product> findProductWithId(@PathVariable(value="id") int id) {
     if (!Validator.isNumber(id)) {
-      System.out.println("id should be number");
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    return productService.findProductWithId(id);
+    Product resultProduct = productService.findProductWithId(id);
+
+    if (resultProduct == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    return new ResponseEntity<Product>(resultProduct, HttpStatus.OK);
   }
+
+  // paging 구현 필요
+  @GetMapping("/products")
+  public ResponseEntity<ArrayList<Product>> getAllProducts() {
+    ArrayList<Product> allProducts =  productService.getAllProducts();
+
+    if (allProducts == null) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return new ResponseEntity<ArrayList<Product>>(allProducts, HttpStatus.OK);
+  }
+
+//  @GetMapping("/products")
+
+
 }

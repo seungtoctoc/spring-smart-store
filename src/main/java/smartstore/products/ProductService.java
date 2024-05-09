@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 public class ProductService {
   private ProductRepository productRepository;
 
-  void addProduct(Product product) {
-    productRepository.addProduct(product);
+  Product addProduct(Product product) {
+    return productRepository.addProduct(product);
   }
 
   ArrayList<Product> getAllProducts() {

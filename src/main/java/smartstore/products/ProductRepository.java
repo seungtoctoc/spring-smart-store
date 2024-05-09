@@ -10,9 +10,11 @@ public class ProductRepository {
   private Map<Integer, Product> productTable = new HashMap<>();
   private int id = 0;
 
-  void addProduct(Product product) {
-    product.setId(id++);
+  Product addProduct(Product product) {
+    product.setId(id);
     productTable.put(product.getId(), product);
+
+    return productTable.get(id++);
   }
 
   ArrayList<Product> getAllProducts() {

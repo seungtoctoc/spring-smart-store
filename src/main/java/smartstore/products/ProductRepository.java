@@ -17,11 +17,12 @@ public class ProductRepository {
     return productTable.get(id++);
   }
 
-  ArrayList<Product> getAllProducts() {
-    return new ArrayList<>(productTable.values());
+  ArrayList<Product> findAllProduct(int limit, int currentPage) {
+    ArrayList<Product> allProducts = new ArrayList<>(productTable.values());
+    return fitArrayList(allProducts, limit, currentPage);
   }
 
-  ArrayList<Product> findProductWithCategory(int categoryId) {
+  ArrayList<Product> findProductWithCategory(int categoryId, int limit, int currentPage) {
     ArrayList<Product> filteredProducts = new ArrayList<>();
 
     for (Product product : productTable.values()) {
@@ -30,7 +31,21 @@ public class ProductRepository {
       }
     }
 
-    return filteredProducts;
+    return fitArrayList(filteredProducts, limit, currentPage);
+  }
+
+  ArrayList<Product> fitArrayList(ArrayList<Product> products, int limit, int currentPage) {
+    ArrayList<Product> fit = new ArrayList<Product>();
+
+    for (int i = limit*(currentPage-1) ; i < limit * currentPage ; i++) {
+      if (i >= products.size()) {
+        break;
+      }
+
+      fit.add(products.get(i));
+    }
+
+    return fit;
   }
 
   Product findProductWithId(int id) {

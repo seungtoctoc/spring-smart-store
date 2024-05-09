@@ -2,7 +2,6 @@ package smartstore.products;
 
 import java.util.ArrayList;
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,12 +13,12 @@ public class ProductService {
     return productRepository.addProduct(product);
   }
 
-  ArrayList<Product> getAllProducts() {
-    return productRepository.getAllProducts();
+  ArrayList<Product> findAllProduct(int limit, int currentPage) {
+    return productRepository.findAllProduct(limit, currentPage);
   }
 
-  ArrayList<Product> findProductWithCategory(int id) {
-    return productRepository.findProductWithCategory(id);
+  ArrayList<Product> findProductWithCategory(int id, int limit, int currentPage) {
+    return productRepository.findProductWithCategory(id, limit, currentPage);
   }
 
   Product findProductWithId(int id) {

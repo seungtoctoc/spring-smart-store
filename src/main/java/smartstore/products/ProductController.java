@@ -1,19 +1,15 @@
 package smartstore.products;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.AllArgsConstructor;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-import org.springframework.http.HttpEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import smartstore.utility.Validator;
@@ -21,7 +17,8 @@ import smartstore.utility.Validator;
 @RestController
 @AllArgsConstructor
 public class ProductController {
-  ProductService productService;
+  private ProductService productService;
+  private static Logger logger = LoggerFactory.getLogger(ProductController.class);
 
   @PostMapping("/products")
   public ResponseEntity addProduct(@RequestBody Product product) {
@@ -39,10 +36,7 @@ public class ProductController {
 
     Product savedProduct = productService.addProduct(product);
 
-    try {
-      System.out.println(savedProduct.getName());
-    }
-    catch(NullPointerException e) {
+    if (savedProduct == null) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -66,9 +60,19 @@ public class ProductController {
 
   // paging 구현 필요
   @GetMapping("/products")
-  public ResponseEntity<ArrayList<Product>> getAllProducts(@RequestParam(value="categoryId", required = false) Integer categoryId) {
+  public ResponseEntity<ArrayList<Product>> findProducts(
+      @RequestParam(value="categoryId", required = false) Integer categoryId,
+      @RequestParam(value="limit", required = false) Integer limit,
+      @RequestParam(value="currentPage", required = false) Integer currentPage
+
+      ) {
+
+    if (limit == null || currentPage == null) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     if (categoryId == null) {
-      ArrayList<Product> allProducts =  productService.getAllProducts();
+      ArrayList<Product> allProducts =  productService.findAllProduct(limit, currentPage);
 
       if (allProducts == null) {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -80,7 +84,7 @@ public class ProductController {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    ArrayList<Product> filteredProducts = productService.findProductWithCategory(categoryId);
+    ArrayList<Product> filteredProducts = productService.findProductWithCategory(categoryId, limit, currentPage);
 
     if (filteredProducts == null) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

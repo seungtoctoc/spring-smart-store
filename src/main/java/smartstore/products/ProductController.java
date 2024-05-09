@@ -62,8 +62,8 @@ public class ProductController {
   @GetMapping("/products")
   public ResponseEntity<ArrayList<Product>> findProducts(
       @RequestParam(value="categoryId", required = false) Integer categoryId,
-      @RequestParam(value="limit", required = false) Integer limit,
-      @RequestParam(value="currentPage", required = false) Integer currentPage
+      @RequestParam(value="limit") Integer limit,
+      @RequestParam(value="currentPage") Integer currentPage
 
       ) {
 

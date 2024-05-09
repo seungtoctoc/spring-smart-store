@@ -18,6 +18,10 @@ public class ProductService {
     return productRepository.getAllProducts();
   }
 
+  ArrayList<Product> findProductWithCategory(int id) {
+    return productRepository.findProductWithCategory(id);
+  }
+
   Product findProductWithId(int id) {
     return productRepository.findProductWithId(id);
   }

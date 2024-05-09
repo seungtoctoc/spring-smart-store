@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import smartstore.utility.Validator;
 
@@ -64,17 +66,26 @@ public class ProductController {
 
   // paging 구현 필요
   @GetMapping("/products")
-  public ResponseEntity<ArrayList<Product>> getAllProducts() {
-    ArrayList<Product> allProducts =  productService.getAllProducts();
+  public ResponseEntity<ArrayList<Product>> getAllProducts(@RequestParam(value="categoryId", required = false) Integer categoryId) {
+    if (categoryId == null) {
+      ArrayList<Product> allProducts =  productService.getAllProducts();
 
-    if (allProducts == null) {
+      if (allProducts == null) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+      return new ResponseEntity<ArrayList<Product>>(allProducts, HttpStatus.OK);
+    }
+
+    if (!Validator.isNumber(categoryId)) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    ArrayList<Product> filteredProducts = productService.findProductWithCategory(categoryId);
+
+    if (filteredProducts == null) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    return new ResponseEntity<ArrayList<Product>>(allProducts, HttpStatus.OK);
+    return new ResponseEntity<ArrayList<Product>>(filteredProducts, HttpStatus.OK);
   }
-
-//  @GetMapping("/products")
-
-
 }

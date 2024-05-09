@@ -21,6 +21,18 @@ public class ProductRepository {
     return new ArrayList<>(productTable.values());
   }
 
+  ArrayList<Product> findProductWithCategory(int categoryId) {
+    ArrayList<Product> filteredProducts = new ArrayList<>();
+
+    for (Product product : productTable.values()) {
+      if (product.getCategoryId() == categoryId) {
+        filteredProducts.add(product);
+      }
+    }
+
+    return filteredProducts;
+  }
+
   Product findProductWithId(int id) {
     return productTable.get(id);
   }

@@ -142,10 +142,7 @@ categoryId: 카테고리 id
 ##### Response Body
 {<br/>
 "id": "회원 id", <br/>
-"email": "이메일", <br/>
-"password": "비밀번호(jwt)", <br/>
-"nickname": "닉네임", <br/>
-"contact": "연락처" <br/>
+"nickname": "닉네임" <br/>
 }
 
 #### 로그인

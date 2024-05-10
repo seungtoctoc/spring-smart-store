@@ -14,7 +14,7 @@ public class ProductService {
     return productRepository.addProduct(product);
   }
 
-  ResponseEntity<Product> updateProduct(int id, Product product) {
+  Product updateProduct(int id, Product product) {
     return productRepository.updateProduct(id, product);
   }
 
@@ -28,5 +28,9 @@ public class ProductService {
 
   Product findProductWithId(int id) {
     return productRepository.findProductWithId(id);
+  }
+
+  void removeProducts(int productId) {
+    productRepository.removeProduct(productId);
   }
 }

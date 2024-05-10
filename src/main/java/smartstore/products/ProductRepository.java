@@ -19,18 +19,14 @@ public class ProductRepository {
     return productTable.get(endId++);
   }
 
-  ResponseEntity<Product> updateProduct(int id, Product product) {
-    if (id >= productTable.size()) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
+  Product updateProduct(int id, Product product) {
     Product prevProduct = productTable.get(id);
     Product updatedProduct = product;
     updatedProduct.setId(prevProduct.getId());
 
     productTable.replace(id, updatedProduct);
 
-    return new ResponseEntity<Product>(productTable.get(id), HttpStatus.OK);
+    return updatedProduct;
   }
 
   ArrayList<Product> findProducts(int limit, int currentPage) {
@@ -68,5 +64,7 @@ public class ProductRepository {
     return productTable.get(id);
   }
 
-
+  void removeProduct(int productId) {
+    productTable.remove(productId);
+  }
 }

@@ -2,6 +2,8 @@ package smartstore.products;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,14 +52,13 @@ public class ProductController {
     if (!Validator.isNumber(id)) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-
-    ResponseEntity<Product> response = productService.updateProduct(id, product);
-
-    if (response == null) {
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    if (findProductWithId(id) == null) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    return response;
+    Product updatedProduct = productService.updateProduct(id, product);
+
+    return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
   }
 
   @GetMapping("/products/{id}")
@@ -79,7 +80,6 @@ public class ProductController {
       @RequestParam(value="categoryId", required = false) Integer categoryId,
       @RequestParam(value="limit") Integer limit,
       @RequestParam(value="currentPage") Integer currentPage
-
       ) {
 
     // check parameters
@@ -113,12 +113,27 @@ public class ProductController {
   }
 
   @PostMapping("/products/remove")
-  public void removeProduct(
-      @RequestBody int[] productIds
+  public ResponseEntity removeProducts(
+      @RequestBody Map<String, int[]> data
   ) {
+    int[] productIds = data.get("productIds");
 
+    if (productIds.length == 0) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    for(int productId : productIds) {
+      if (findProductWithId(productId) == null) {
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+      }
+      productService.removeProducts(productId);
+    }
+
+    for(int productId : productIds) {
+      if (findProductWithId(productId) != null) {
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }
-
-

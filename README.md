@@ -124,3 +124,86 @@ categoryId: 카테고리 id
 "sellerId": 판매자 id, <br/>
 "categoryId": 카테고리 id <br/>
 }, {  }, {  }, ... ]
+
+<br/>
+
+### 회원
+#### 회원가입
+| Method | URL          | HTTP Status Code  |
+|--------|--------------|-------------------|
+| POST   | /user/signup | 201 / 400, 500 |
+##### Request Body
+{<br/>
+"email": "이메일", <br/>
+"password": "비밀번호", <br/>
+"nickname": "닉네임", <br/>
+"contact": "연락처" <br/>
+}
+##### Response Body
+{<br/>
+"id": "회원 id", <br/>
+"email": "이메일", <br/>
+"password": "비밀번호(jwt)", <br/>
+"nickname": "닉네임", <br/>
+"contact": "연락처" <br/>
+}
+
+#### 로그인
+| Method | URL          | HTTP Status Code  |
+|--------|--------------|-------------------|
+| POST   | /user/signin | 201 / 400, 500 |
+##### Request Body
+{<br/>
+"email": "이메일", <br/>
+"password": "비밀번호" <br/>
+}
+##### Response Body
+{<br/>
+"id": "회원 id", <br/>
+"email": "이메일", <br/>
+"password": "비밀번호(jwt)", <br/>
+"nickname": "닉네임", <br/>
+"contact": "연락처" <br/>
+}
+
+<br/>
+
+#### 회원 정보 수정
+| Method | URL         | HTTP Status Code |
+|--------|-------------|------------------|
+| PUT    | /user | 200 / 400, 500   |
+##### Request Body
+{<br/>
+"id": "수정할 회원 id", <br/>
+"email": "이메일", <br/>
+"password": "비밀번호", <br/>
+"nickname": "닉네임", <br/>
+"contact": "연락처" <br/>
+}
+##### Response Body
+{<br/>
+"id": "회원 id", <br/>
+"email": "이메일", <br/>
+"password": "비밀번호(jwt)", <br/>
+"nickname": "닉네임", <br/>
+"contact": "연락처" <br/>
+}
+
+<br/>
+
+#### 회원 정보 받기
+| Method | URL         | HTTP Status Code |
+|--------|-------------|------------------|
+| GET    | /user | 200 / 400, 500   |
+##### Request Body
+{<br/>
+"id": "정보를 받을 회원의 id", <br/>
+}
+##### Response Body
+{<br/>
+"id": "회원 id", <br/>
+"email": "이메일", <br/>
+"password": "비밀번호(jwt)", <br/>
+"nickname": "닉네임", <br/>
+"contact": "연락처" <br/>
+}

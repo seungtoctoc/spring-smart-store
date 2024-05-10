@@ -8,5 +8,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
   private UserRepository userRepository;
 
-  User
+  String signUp(User user) {
+    return userRepository.signUp(user);
+  }
 }

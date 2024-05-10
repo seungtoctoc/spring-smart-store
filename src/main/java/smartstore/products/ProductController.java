@@ -1,5 +1,6 @@
 package smartstore.products;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -110,4 +111,14 @@ public class ProductController {
 
     return new ResponseEntity<ArrayList<Product>>(filteredProducts, HttpStatus.OK);
   }
+
+  @PostMapping("/products/remove")
+  public void removeProduct(
+      @RequestBody int[] productIds
+  ) {
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }
+
+

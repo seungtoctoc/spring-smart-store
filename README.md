@@ -82,3 +82,21 @@ categoryId: 카테고리 id
 "sellerId": 판매자 id, <br/>
 "categoryId": 카테고리 id <br/>
 }, {  }, {  }, ... ]
+
+### 상품 삭제
+| Method | URL              | HTTP Status Code  |
+|--------|------------------|-------------------|
+| POST   | /products/remove | 200 / 400, 500 |
+#### Request Body
+{<br/>
+"productIds": [ 삭제할 상품 id1, ... ]<br/>
+}
+#### Response Body
+[  { <br/>
+"id": 0, <br/>
+"name": "상품 이름", <br/>
+"desc": "상품 설명", <br/>
+"price": 상품 가격, <br/>
+"sellerId": 판매자 id, <br/>
+"categoryId": 카테고리 id <br/>
+}, {  }, {  }, ... ]

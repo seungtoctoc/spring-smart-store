@@ -13,12 +13,12 @@ public class ProductService {
     return productRepository.addProduct(product);
   }
 
-  ArrayList<Product> findAllProduct(int limit, int currentPage) {
-    return productRepository.findAllProduct(limit, currentPage);
+  ArrayList<Product> findProducts(int limit, int currentPage) {
+    return productRepository.findProducts(limit, currentPage);
   }
 
-  ArrayList<Product> findProductWithCategory(int id, int limit, int currentPage) {
-    return productRepository.findProductWithCategory(id, limit, currentPage);
+  ArrayList<Product> findProducts(int limit, int currentPage, int categoryId) {
+    return productRepository.findProducts(limit, currentPage, categoryId);
   }
 
   Product findProductWithId(int id) {

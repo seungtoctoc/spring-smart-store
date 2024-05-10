@@ -17,12 +17,12 @@ public class ProductRepository {
     return productTable.get(id++);
   }
 
-  ArrayList<Product> findAllProduct(int limit, int currentPage) {
+  ArrayList<Product> findProducts(int limit, int currentPage) {
     ArrayList<Product> allProducts = new ArrayList<>(productTable.values());
     return fitArrayList(allProducts, limit, currentPage);
   }
 
-  ArrayList<Product> findProductWithCategory(int categoryId, int limit, int currentPage) {
+  ArrayList<Product> findProducts(int limit, int currentPage, int categoryId) {
     ArrayList<Product> filteredProducts = new ArrayList<>();
 
     for (Product product : productTable.values()) {

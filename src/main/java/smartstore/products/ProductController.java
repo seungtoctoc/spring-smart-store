@@ -58,7 +58,6 @@ public class ProductController {
     return new ResponseEntity<Product>(resultProduct, HttpStatus.OK);
   }
 
-  // paging 구현 필요
   @GetMapping("/products")
   public ResponseEntity<ArrayList<Product>> findProducts(
       @RequestParam(value="categoryId", required = false) Integer categoryId,
@@ -71,8 +70,9 @@ public class ProductController {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    // find all products
     if (categoryId == null) {
-      ArrayList<Product> allProducts =  productService.findAllProduct(limit, currentPage);
+      ArrayList<Product> allProducts =  productService.findProducts(limit, currentPage);
 
       if (allProducts == null) {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -80,11 +80,12 @@ public class ProductController {
       return new ResponseEntity<ArrayList<Product>>(allProducts, HttpStatus.OK);
     }
 
+    // find products by category
     if (!Validator.isNumber(categoryId)) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    ArrayList<Product> filteredProducts = productService.findProductWithCategory(categoryId, limit, currentPage);
+    ArrayList<Product> filteredProducts = productService.findProducts(limit, currentPage, categoryId);
 
     if (filteredProducts == null) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

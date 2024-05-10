@@ -3,18 +3,34 @@ package smartstore.products;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductRepository {
   private Map<Integer, Product> productTable = new HashMap<>();
-  private int id = 0;
+  private int endId = 0;
 
   Product addProduct(Product product) {
-    product.setId(id);
+    product.setId(endId);
     productTable.put(product.getId(), product);
 
-    return productTable.get(id++);
+    return productTable.get(endId++);
+  }
+
+  ResponseEntity<Product> updateProduct(int id, Product product) {
+    if (id >= productTable.size()) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    Product prevProduct = productTable.get(id);
+    Product updatedProduct = product;
+    updatedProduct.setId(prevProduct.getId());
+
+    productTable.replace(id, updatedProduct);
+
+    return new ResponseEntity<Product>(productTable.get(id), HttpStatus.OK);
   }
 
   ArrayList<Product> findProducts(int limit, int currentPage) {

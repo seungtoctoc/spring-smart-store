@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,11 +26,9 @@ public class ProductController {
     if (!Validator.isEnglish(product.getName())) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-
     if (!Validator.isNumber(product.getPrice())) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-
     if (product.getPrice() < 0) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -39,8 +38,25 @@ public class ProductController {
     if (savedProduct == null) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    return new ResponseEntity<Product>(savedProduct, HttpStatus.CREATED);
+  }
 
-    return new ResponseEntity<>(HttpStatus.CREATED);
+  @PutMapping("/products/{id}")
+  public ResponseEntity<Product> updateProduct(
+      @PathVariable(value="id") int id,
+      @RequestBody Product product
+    ) {
+    if (!Validator.isNumber(id)) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    ResponseEntity<Product> response = productService.updateProduct(id, product);
+
+    if (response == null) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return response;
   }
 
   @GetMapping("/products/{id}")
@@ -54,7 +70,6 @@ public class ProductController {
     if (resultProduct == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
     return new ResponseEntity<Product>(resultProduct, HttpStatus.OK);
   }
 
@@ -66,6 +81,7 @@ public class ProductController {
 
       ) {
 
+    // check parameters
     if (limit == null || currentPage == null) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -87,6 +103,7 @@ public class ProductController {
 
     ArrayList<Product> filteredProducts = productService.findProducts(limit, currentPage, categoryId);
 
+    // return
     if (filteredProducts == null) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -15,22 +15,46 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class UserController {
   private UserService userService;
-  private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
   @PostMapping("/signup")
   public ResponseEntity<Map<String, String>> signUp(@RequestBody User user) {
-    logger.info(user.getNickname());
+    // validate id
+    String id = user.getId();
+    ResponseEntity validateResp = isUniqueId(id);
 
+    if (validateResp.getStatusCode() != HttpStatus.OK) {
+      return  validateResp;
+    }
+
+    // sign up
     String createdNickname = userService.signUp(user);
 
+
+    // validate
     if (createdNickname == null){
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // return
     Map<String, String> responseBody = new HashMap<>();
     responseBody.put("nickname", createdNickname);
-
     return new ResponseEntity<>(responseBody, HttpStatus.OK);
   }
 
+  @PostMapping("/checkid")
+  public ResponseEntity isUniqueId(@RequestBody String id) {
+    // validate
+    Boolean isUnique = userService.isUniqueId(id);
+
+    if (isUnique == null) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // return
+    if (isUnique) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    return new ResponseEntity<>(HttpStatus.CONFLICT);
+  }
 }

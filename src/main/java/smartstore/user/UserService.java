@@ -11,4 +11,8 @@ public class UserService {
   String signUp(User user) {
     return userRepository.signUp(user);
   }
+
+  Boolean isUniqueId(String id) {
+    return userRepository.isUniqueId(id);
+  }
 }

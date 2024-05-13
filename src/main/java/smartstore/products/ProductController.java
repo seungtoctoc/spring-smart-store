@@ -26,6 +26,7 @@ public class ProductController {
 
   @PostMapping("/products")
   public ResponseEntity addProduct(@RequestBody Product product) {
+    // validate
     if (!Validator.isEnglish(product.getName())) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -36,8 +37,10 @@ public class ProductController {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    // add product
     Product savedProduct = productService.addProduct(product);
 
+    // return
     if (savedProduct == null) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -49,6 +52,7 @@ public class ProductController {
       @PathVariable(value="id") int id,
       @RequestBody Product product
     ) {
+    // validate
     if (!Validator.isNumber(id)) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -56,19 +60,24 @@ public class ProductController {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    // update product
     Product updatedProduct = productService.updateProduct(id, product);
 
+    // return
     return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
   }
 
   @GetMapping("/products/{id}")
   public ResponseEntity<Product> findProductWithId(@PathVariable(value="id") int id) {
+    // validate
     if (!Validator.isNumber(id)) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    // find product with id
     Product resultProduct = productService.findProductWithId(id);
 
+    // return
     if (resultProduct == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -82,33 +91,36 @@ public class ProductController {
       @RequestParam(value="currentPage") Integer currentPage
       ) {
 
-    // check parameters
+    // validate
     if (limit == null || currentPage == null) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    // find all products
+    // Find all products
     if (categoryId == null) {
+      // find
       ArrayList<Product> allProducts =  productService.findProducts(limit, currentPage);
 
+      // return
       if (allProducts == null) {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
       return new ResponseEntity<ArrayList<Product>>(allProducts, HttpStatus.OK);
     }
 
-    // find products by category
+    // Find products by category
+    // validate
     if (!Validator.isNumber(categoryId)) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    // find
     ArrayList<Product> filteredProducts = productService.findProducts(limit, currentPage, categoryId);
 
     // return
     if (filteredProducts == null) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
     return new ResponseEntity<ArrayList<Product>>(filteredProducts, HttpStatus.OK);
   }
 
@@ -118,22 +130,31 @@ public class ProductController {
   ) {
     int[] productIds = data.get("productIds");
 
+    // validate
     if (productIds.length == 0) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    // Remove
     for(int productId : productIds) {
+      // validate
       if (findProductWithId(productId) == null) {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
       }
+
+      // remove
       productService.removeProducts(productId);
     }
 
+
+    // validate
     for(int productId : productIds) {
       if (findProductWithId(productId) != null) {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
+
+    // return
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }

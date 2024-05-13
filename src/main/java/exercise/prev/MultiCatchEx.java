@@ -1,4 +1,4 @@
-package exercise;
+package exercise.prev;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

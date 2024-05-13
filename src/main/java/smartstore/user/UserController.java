@@ -3,8 +3,6 @@ package smartstore.user;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,24 +12,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 public class UserController {
+
   private UserService userService;
 
-  @PostMapping("/signup")
+  @PostMapping("/signUp")
   public ResponseEntity<Map<String, String>> signUp(@RequestBody User user) {
     // validate id
     String id = user.getId();
-    ResponseEntity validateResp = isUniqueId(id);
+    Boolean isUniqueId = userService.isUniqueId(id);
 
-    if (validateResp.getStatusCode() != HttpStatus.OK) {
-      return  validateResp;
+    if (isUniqueId == null) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    if (!isUniqueId) {
+      return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     // sign up
     String createdNickname = userService.signUp(user);
 
-
     // validate
-    if (createdNickname == null){
+    if (createdNickname == null) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -41,20 +42,21 @@ public class UserController {
     return new ResponseEntity<>(responseBody, HttpStatus.OK);
   }
 
-  @PostMapping("/checkid")
-  public ResponseEntity isUniqueId(@RequestBody String id) {
+  @PostMapping("/checkId")
+  public ResponseEntity isUniqueId(@RequestBody Map<String, String> data) {
     // validate
-    Boolean isUnique = userService.isUniqueId(id);
+    Boolean isUnique = userService.isUniqueId(data.get("id"));
 
     if (isUnique == null) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    System.out.println("is Unique: " + isUnique);
+
     // return
     if (isUnique) {
       return new ResponseEntity<>(HttpStatus.OK);
     }
-
     return new ResponseEntity<>(HttpStatus.CONFLICT);
   }
 }

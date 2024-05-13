@@ -1,8 +1,6 @@
 package smartstore.products;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

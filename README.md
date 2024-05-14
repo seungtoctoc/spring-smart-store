@@ -177,6 +177,7 @@ categoryId: 카테고리 id
 ##### Response Body
 
 {<br/>
+"success": 성공여부(boolean) <br/>
 "nickname": "닉네임" <br/>
 }
 

@@ -28,10 +28,4 @@ public class OrderController {
 
     return success(savedOrder);
   }
-
-  @PostMapping("/orders/test")
-  public OrderDTO testOrder(@RequestBody OrderDTO orderDTO) {
-    System.out.println("******************");
-    return orderDTO;
-  }
 }

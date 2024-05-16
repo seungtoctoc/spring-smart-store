@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class UserService {
+
   private UserRepository userRepository;
 
   String signUp(User user) {

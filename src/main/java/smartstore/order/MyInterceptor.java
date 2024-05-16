@@ -2,10 +2,11 @@ package smartstore.order;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-
+@AllArgsConstructor
 public class MyInterceptor implements HandlerInterceptor {
 
   @Override

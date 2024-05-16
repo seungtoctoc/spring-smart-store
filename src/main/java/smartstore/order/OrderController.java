@@ -19,15 +19,19 @@ public class OrderController {
   OrderService orderService;
 
   @PostMapping("/orders")
-  public ApiResult<Order> addOrder(@RequestBody Order order) {
-    log.info("order.toString()\n" + order.toString());
-
-    Order savedOrder = orderService.addOrder(order);
+  public ApiResult<Order> createOrder(@RequestBody OrderDTO orderDTO) {
+    Order savedOrder = orderService.createOrder(orderDTO);
 
     if (savedOrder == null) {
       return error("server_error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     return success(savedOrder);
+  }
+
+  @PostMapping("/orders/test")
+  public OrderDTO testOrder(@RequestBody OrderDTO orderDTO) {
+    System.out.println("******************");
+    return orderDTO;
   }
 }

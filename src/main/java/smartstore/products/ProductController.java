@@ -3,8 +3,6 @@ package smartstore.products;
 import java.util.ArrayList;
 import java.util.Map;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +17,8 @@ import smartstore.utility.Validator;
 @RestController
 @AllArgsConstructor
 public class ProductController {
+
   private ProductService productService;
-  private static Logger logger = LoggerFactory.getLogger(ProductController.class);
 
   @PostMapping("/products")
   public ResponseEntity addProduct(@RequestBody Product product) {
@@ -47,9 +45,9 @@ public class ProductController {
 
   @PutMapping("/products/{id}")
   public ResponseEntity<Product> updateProduct(
-      @PathVariable(value="id") int id,
+      @PathVariable(value = "id") int id,
       @RequestBody Product product
-    ) {
+  ) {
     // validate
     if (!Validator.isNumber(id)) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -66,7 +64,7 @@ public class ProductController {
   }
 
   @GetMapping("/products/{id}")
-  public ResponseEntity<Product> findProductWithId(@PathVariable(value="id") int id) {
+  public ResponseEntity<Product> findProductWithId(@PathVariable(value = "id") int id) {
     // validate
     if (!Validator.isNumber(id)) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -84,10 +82,10 @@ public class ProductController {
 
   @GetMapping("/products")
   public ResponseEntity<ArrayList<Product>> findProducts(
-      @RequestParam(value="categoryId", required = false) Integer categoryId,
-      @RequestParam(value="limit") Integer limit,
-      @RequestParam(value="currentPage") Integer currentPage
-      ) {
+      @RequestParam(value = "categoryId", required = false) Integer categoryId,
+      @RequestParam(value = "limit") Integer limit,
+      @RequestParam(value = "currentPage") Integer currentPage
+  ) {
 
     // validate
     if (limit == null || currentPage == null) {
@@ -97,7 +95,7 @@ public class ProductController {
     // Find all products
     if (categoryId == null) {
       // find
-      ArrayList<Product> allProducts =  productService.findProducts(limit, currentPage);
+      ArrayList<Product> allProducts = productService.findProducts(limit, currentPage);
 
       // return
       if (allProducts == null) {
@@ -113,7 +111,8 @@ public class ProductController {
     }
 
     // find
-    ArrayList<Product> filteredProducts = productService.findProducts(limit, currentPage, categoryId);
+    ArrayList<Product> filteredProducts = productService.findProducts(limit, currentPage,
+        categoryId);
 
     // return
     if (filteredProducts == null) {
@@ -134,7 +133,7 @@ public class ProductController {
     }
 
     // Remove
-    for(int productId : productIds) {
+    for (int productId : productIds) {
       // validate
       if (findProductWithId(productId) == null) {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -144,9 +143,8 @@ public class ProductController {
       productService.removeProducts(productId);
     }
 
-
     // validate
-    for(int productId : productIds) {
+    for (int productId : productIds) {
       if (findProductWithId(productId) != null) {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }

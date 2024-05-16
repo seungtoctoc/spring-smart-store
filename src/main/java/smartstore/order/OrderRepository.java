@@ -10,9 +10,9 @@ public class OrderRepository {
   Map<Integer, Order> orderTable = new HashMap<>();
   private int end = -1;
 
-  Order addOrder(Order order) {
+  Order createOrder(Order order) {
     order.setId(++end);
-    orderTable.put(end, order);
+    orderTable.put(order.getId(), order);
 
     return orderTable.get(end);
   }

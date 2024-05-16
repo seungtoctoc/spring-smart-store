@@ -20,7 +20,7 @@ public class UserController {
   private UserService userService;
 
   @PostMapping("/signUp")
-  public ApiResult signUp(@RequestBody User user) {
+  public ApiResult<Map<String, String>> signUp(@RequestBody User user) {
     // validate id
     String id = user.getId();
     Boolean isUniqueId = userService.isUniqueId(id);
@@ -47,7 +47,7 @@ public class UserController {
   }
 
   @PostMapping("/checkId")
-  public ResponseEntity isUniqueId(@RequestBody Map<String, String> data) {
+  public ResponseEntity<String> isUniqueId(@RequestBody Map<String, String> data) {
     // validate
     Boolean isUnique = userService.isUniqueId(data.get("id"));
 

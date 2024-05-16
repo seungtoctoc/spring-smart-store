@@ -11,5 +11,17 @@ public class Order {
   private int userId;
   private int orderNumber;
   private int productId;
+
+  @Override
+  public String toString() {
+    return "Order{" +
+        "id=" + id +
+        ", userId=" + userId +
+        ", orderNumber=" + orderNumber +
+        ", productId=" + productId +
+        ", quantity=" + quantity +
+        '}';
+  }
+
   private int quantity;
 }

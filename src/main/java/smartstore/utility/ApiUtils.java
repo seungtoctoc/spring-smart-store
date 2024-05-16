@@ -7,11 +7,11 @@ import org.springframework.http.HttpStatus;
 public class ApiUtils<T> {
 
   public static <T> ApiResult<T> success(T data) {
-    return new ApiResult(true, data, null);
+    return new ApiResult<>(true, data, null);
   }
 
-  public static ApiResult error(String message, HttpStatus httpStatus) {
-    return new ApiResult(false,
+  public static <T> ApiResult<T> error(String message, HttpStatus httpStatus) {
+    return new ApiResult<>(false,
         null,
         new ApiError(message, httpStatus));
   }
@@ -26,15 +26,10 @@ public class ApiUtils<T> {
   }
 
   @Getter
+  @AllArgsConstructor
   static class ApiError {
 
     String message;
     HttpStatus httpStatus;
-
-    ApiError(String message, HttpStatus httpStatus) {
-      this.message = message;
-      this.httpStatus = httpStatus;
-    }
   }
-
 }

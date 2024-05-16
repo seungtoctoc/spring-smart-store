@@ -3,12 +3,11 @@ package smartstore.products;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ProductRepository {
+
   private Map<Integer, Product> productTable = new HashMap<>();
   private int endId = 0;
 
@@ -49,7 +48,7 @@ public class ProductRepository {
   ArrayList<Product> fitArrayList(ArrayList<Product> products, int limit, int currentPage) {
     ArrayList<Product> fit = new ArrayList<Product>();
 
-    for (int i = limit*(currentPage-1) ; i < limit * currentPage ; i++) {
+    for (int i = limit * (currentPage - 1); i < limit * currentPage; i++) {
       if (i >= products.size()) {
         break;
       }
@@ -60,7 +59,7 @@ public class ProductRepository {
     return fit;
   }
 
-  Product findProductWithId(int id) {
+  public Product findProductWithId(int id) {
     return productTable.get(id);
   }
 

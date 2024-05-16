@@ -26,7 +26,7 @@ public class ProductService {
     return productRepository.findProducts(limit, currentPage, categoryId);
   }
 
-  public Product findProductWithId(int id) {
+  Product findProductWithId(int id) {
     return productRepository.findProductWithId(id);
   }
 

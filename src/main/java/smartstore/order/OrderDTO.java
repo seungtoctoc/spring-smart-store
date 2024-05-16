@@ -10,5 +10,4 @@ public class OrderDTO {
   private int userId;
   private int productId;
   private int quantity;
-
 }

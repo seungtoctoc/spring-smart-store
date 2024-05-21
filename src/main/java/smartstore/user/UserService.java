@@ -1,8 +1,8 @@
 package smartstore.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,25 +19,34 @@ public class UserService {
 //
   @Transactional
   Map<String, String> signUp(UserDTO userDTO) {
-//    if (!userRepository.isUniqueUserId(userDTO.getUserId())) {
-//      throw new IllegalStateException("id is not unique");
-//    }
+    if (!userRepository.isUniqueUserId(userDTO.getUserId())) {
+      throw new IllegalStateException("id is not unique");
+    }
 
     User newUser = userDTO.makeUser();
-    User savedUser = userRepository.signUp(newUser);
+    userRepository.saveUser(newUser);
+
+    User savedUser = userRepository.findUserWithUserId(userDTO.getUserId());
 
     Map<String, String> response = new HashMap<>();
-    response.put("id", savedUser.getId().toString());
-    response.put("userId", savedUser.getUserId());
+    if (savedUser != null) {
+      response.put("id", savedUser.getId().toString());
+      response.put("userId", savedUser.getUserId());
+    }
 
     return response;
   }
 
   Map<String, String> login(LoginDTO loginDTO) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    Map<String, String> convertedLoginDTO = objectMapper.convertValue(loginDTO, Map.class);
+    if (userRepository.isUniqueUserId(loginDTO.getUserId())) {
+      throw new IllegalStateException();
+    }
 
-    User foundUser = userRepository.findUser(convertedLoginDTO);
+    User foundUser = userRepository.findUserWithUserId(loginDTO.getUserId());
+
+    if (!foundUser.getPassword().equals(loginDTO.getPassword())) {
+      throw new InputMismatchException();
+    }
 
     Map<String, String> response = new HashMap<>();
     response.put("id", foundUser.getUserId());

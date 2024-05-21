@@ -2,8 +2,6 @@ package smartstore.user;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -12,21 +10,19 @@ public class UserRepository {
   @PersistenceContext
   EntityManager entityManager;
 
-  User signUp(User user) {
-    entityManager.persist(user);
-
-    User savedUser = entityManager.find(User.class, user.getId());
-    return savedUser;
+  void saveUser(User user) {
+    // persist로 넣어야 하는데, 겹칠 경우 그냥 넣도록 (for 테스트)
+    entityManager.merge(user);
   }
 
-  User findUser(Map<String, String> userIdAndPassword) {
-    String jpql = "SELECT e FROM User e WHERE e.userId = :userId AND e.password = :password";
-    List<User> resultList = entityManager.createQuery(jpql, User.class)
-        .setParameter("userId", userIdAndPassword.get("userId"))
-        .setParameter("password", userIdAndPassword.get("password"))
-        .getResultList();
+  User findUserWithUserId(String userId) {
+    String jpql = "SELECT e FROM User e WHERE e.userId = :userId";
 
-    return resultList.get(0);
+    User foundUser = entityManager.createQuery(jpql, User.class)
+        .setParameter("userId", userId)
+        .getSingleResult();
+
+    return foundUser;
   }
 
   Boolean isUniqueUserId(String userId) {

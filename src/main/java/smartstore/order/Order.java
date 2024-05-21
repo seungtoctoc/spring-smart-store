@@ -11,7 +11,7 @@ import smartstore.products.Product;
 public class Order {
 
   private int id;
-  //  private int userId;
+  // private int userId;
   // DDD(도메인 주도 설계)스러운 설계... (sql식이었으면 productId)
   private final Product product;
   private final int quantity;

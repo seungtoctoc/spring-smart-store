@@ -1,5 +1,7 @@
 package smartstore.utility;
 
+import java.util.HashMap;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -10,10 +12,8 @@ public class ApiUtils<T> {
     return new ApiResult<>(true, data, null);
   }
 
-  public static <T> ApiResult<T> error(String message, HttpStatus httpStatus) {
-    return new ApiResult<>(false,
-        null,
-        new ApiError(message, httpStatus));
+  public static <T> ApiResult<T> error(T message, HttpStatus httpStatus) {
+    return new ApiResult<>(false, null, new ApiError<>(message, httpStatus));
   }
 
   @Getter
@@ -22,14 +22,23 @@ public class ApiUtils<T> {
 
     boolean success;
     T response;
-    ApiError error;
+    ApiError<T> error;
   }
 
   @Getter
   @AllArgsConstructor
-  static class ApiError {
+  static class ApiError<T> {
 
-    String message;
+    T message;
     HttpStatus httpStatus;
   }
+
+  public static Map<String, String> makeMap(String key, String val) {
+    Map<String, String> resp = new HashMap<>();
+    resp.put(key, val);
+
+    return resp;
+  }
+
+
 }

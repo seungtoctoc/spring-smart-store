@@ -1,11 +1,11 @@
-package smartstore.user;
+package smartstore.user.userDTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 
 @Getter
-public class LoginDTO {
+public class LogInReq {
 
   @NotBlank(message = "아이디는 필수!")
   @NotEmpty

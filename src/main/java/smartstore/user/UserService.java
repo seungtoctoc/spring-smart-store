@@ -4,59 +4,55 @@ import jakarta.transaction.Transactional;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import smartstore.user.userDTO.LogInReq;
+import smartstore.user.userDTO.SignUpReq;
 
 @Service
 @AllArgsConstructor
 public class UserService {
 
-  private UserRepository userRepository;
+  private UserJPARepository userJPARepository;
 
-  //  public void makeConnection() {
-//    userRepository.makeConnection();
-//  }
-//
   @Transactional
-  Map<String, String> signUp(UserDTO userDTO) {
-    if (!userRepository.isUniqueUserId(userDTO.getUserId())) {
-      throw new IllegalStateException("id is not unique");
+  Map<String, String> signUp(SignUpReq signUpReq) {
+    Optional<User> foundUser = userJPARepository.findByUserId(signUpReq.getUserId());
+
+    if (foundUser.isEmpty()) {
+      throw new IllegalStateException();
     }
 
-    User newUser = userDTO.makeUser();
-    userRepository.saveUser(newUser);
-
-    User savedUser = userRepository.findUserWithUserId(userDTO.getUserId());
+    User createdUser = userJPARepository.save(signUpReq.makeUser());
 
     Map<String, String> response = new HashMap<>();
-    if (savedUser != null) {
-      response.put("id", savedUser.getId().toString());
-      response.put("userId", savedUser.getUserId());
-    }
+
+    response.put("userId", createdUser.getUserId());
+    response.put("nickname", createdUser.getNickname());
 
     return response;
   }
 
-  Map<String, String> login(LoginDTO loginDTO) {
-    if (userRepository.isUniqueUserId(loginDTO.getUserId())) {
+  Map<String, String> login(LogInReq loginReq) {
+    Optional<User> foundUser = userJPARepository.findByUserId(loginReq.getUserId());
+
+    if (foundUser.isEmpty()) {
       throw new IllegalStateException();
     }
 
-    User foundUser = userRepository.findUserWithUserId(loginDTO.getUserId());
-
-    if (!foundUser.getPassword().equals(loginDTO.getPassword())) {
+    if (!foundUser.get().getPassword().equals(loginReq.getPassword())) {
       throw new InputMismatchException();
     }
 
     Map<String, String> response = new HashMap<>();
-    response.put("id", foundUser.getUserId());
-    response.put("nickname", foundUser.getNickname());
-    response.put("contact", foundUser.getContact());
+    response.put("userId", foundUser.get().getUserId());
+    response.put("nickname", foundUser.get().getNickname());
 
     return response;
   }
 
-  Boolean isUniqueId(String userId) {
-    return userRepository.isUniqueUserId(userId);
+  Optional<User> findByUserId(String userId) {
+    return userJPARepository.findByUserId(userId);
   }
 }

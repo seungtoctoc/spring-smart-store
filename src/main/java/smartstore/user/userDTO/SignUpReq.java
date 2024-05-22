@@ -1,4 +1,4 @@
-package smartstore.user;
+package smartstore.user.userDTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -6,10 +6,11 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import smartstore.user.User;
 
 @Getter
 @AllArgsConstructor
-public class UserDTO {
+public class SignUpReq {
 
   private int id;
 

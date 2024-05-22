@@ -2,7 +2,6 @@ package smartstore.user.userDTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +14,6 @@ public class SignUpReq {
   private int id;
 
   @NotBlank(message = "아이디는 필수!")
-  @NotEmpty
   private String userId;
 
   @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "이메일 똑바로 ;")
@@ -33,7 +31,7 @@ public class SignUpReq {
   @NotBlank(message = "연락처는 필수!")
   private String contact;
 
-  User makeUser() {
+  public User makeUser() {
     return new User(id, userId, email, password, nickname, contact);
   }
 }

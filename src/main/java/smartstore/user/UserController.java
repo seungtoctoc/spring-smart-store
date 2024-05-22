@@ -2,16 +2,19 @@ package smartstore.user;
 
 import jakarta.validation.Valid;
 import java.util.InputMismatchException;
-import java.util.Map;
 import lombok.AllArgsConstructor;
+import lombok.With;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import smartstore.user.userDTO.LogInReq;
+import smartstore.user.userDTO.LogInRes;
 import smartstore.user.userDTO.SignUpReq;
+import smartstore.user.userDTO.SignUpRes;
+import smartstore.user.userDTO.WithdrawReq;
 import smartstore.utility.ApiUtils;
 
 @RestController
@@ -24,17 +27,13 @@ public class UserController {
   @PostMapping("/signUp")
   public ApiUtils.ApiResult<Object> signUp(@Valid @RequestBody SignUpReq signUpReq) {
     try {
-      if (userService.findByUserId(signUpReq.getUserId()).isPresent()) {
-        return ApiUtils.error("id is not unique", HttpStatus.CONFLICT);
-      }
+      SignUpRes signUpRes = userService.signUp(signUpReq);
 
-      Map<String, String> response = userService.signUp(signUpReq);
-
-      if (response == null) {
+      if (signUpRes == null) {
         return ApiUtils.error(ApiUtils.makeMap("error", "server error"),
             HttpStatus.INTERNAL_SERVER_ERROR);
       }
-      return ApiUtils.success(response);
+      return ApiUtils.success(signUpRes);
     } catch (IllegalStateException e) {
       return ApiUtils.error(ApiUtils.makeMap("error", "id is not unique"),
           HttpStatus.CONFLICT);
@@ -44,37 +43,25 @@ public class UserController {
   @PostMapping("/login")
   public ApiUtils.ApiResult<Object> login(@Valid @RequestBody LogInReq loginReq) {
     try {
-      Map<String, String> response = userService.login(loginReq);
+      LogInRes logInRes = userService.login(loginReq);
 
-      if (response == null) {
+      if (logInRes == null) {
         return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
       }
 
-      return ApiUtils.success(response);
+      return ApiUtils.success(logInRes);
     } catch (IllegalStateException e) {
-      return ApiUtils.error(ApiUtils.makeMap("error", "id is not exist"),
+      return ApiUtils.error(ApiUtils.makeMap("error", "check Id"),
           HttpStatus.BAD_REQUEST);
     } catch (InputMismatchException e) {
-      return ApiUtils.error(ApiUtils.makeMap("error", "password is not correct"),
+      return ApiUtils.error(ApiUtils.makeMap("error", "check Password"),
           HttpStatus.BAD_REQUEST);
     }
-
   }
 
-  @PostMapping("/checkId")
-  public ResponseEntity<String> isUniqueId(@RequestBody Map<String, String> data) {
-    // validate
-    Boolean isUnique = userService.isUniqueId(data.get("userId"));
+  @DeleteMapping("/user")
+  public ApiUtils.ApiResult<Object> withdraw(@Valid @RequestBody WithdrawReq withdrawReq) {
 
-    if (isUnique == null) {
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    // return
-    if (isUnique) {
-      return new ResponseEntity<>(HttpStatus.OK);
-    }
-    return new ResponseEntity<>(HttpStatus.CONFLICT);
   }
 }
 

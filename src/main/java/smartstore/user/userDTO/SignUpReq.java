@@ -11,8 +11,6 @@ import smartstore.user.User;
 @AllArgsConstructor
 public class SignUpReq {
 
-  private int id;
-
   @NotBlank(message = "아이디는 필수!")
   private String userId;
 
@@ -32,6 +30,6 @@ public class SignUpReq {
   private String contact;
 
   public User makeUser() {
-    return new User(id, userId, email, password, nickname, contact);
+    return new User(null, userId, email, password, nickname, contact);
   }
 }

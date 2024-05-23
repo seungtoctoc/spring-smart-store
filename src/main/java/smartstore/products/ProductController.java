@@ -1,17 +1,20 @@
 package smartstore.products;
 
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import smartstore.products.productDTO.FindProductReq;
+import smartstore.products.productDTO.ProductReq;
+import smartstore.products.productDTO.ProductRes;
+import smartstore.utility.ApiUtils;
 import smartstore.utility.Validator;
 
 @RestController
@@ -21,57 +24,39 @@ public class ProductController {
   private ProductService productService;
 
   @PostMapping("/products")
-  public ResponseEntity addProduct(@RequestBody Product product) {
-    // validate
-    if (!Validator.isEnglish(product.getName())) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-    if (!Validator.isNumber(product.getPrice())) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-    if (product.getPrice() < 0) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
+  public ApiUtils.ApiResult<Object> addProduct(@RequestBody ProductReq productReq) {
+    ProductRes productRes = productService.saveProduct(productReq);
 
-    // add product
-    Product savedProduct = productService.addProduct(product);
-
-    // return
-    if (savedProduct == null) {
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    if (productRes == null) {
+      return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return new ResponseEntity<Product>(savedProduct, HttpStatus.CREATED);
+    return ApiUtils.success(productRes);
   }
 
-  @PutMapping("/products/{id}")
-  public ResponseEntity<Product> updateProduct(
-      @PathVariable(value = "id") int id,
-      @RequestBody Product product
-  ) {
-    // validate
-    if (!Validator.isNumber(id)) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-    if (findProductWithId(id) == null) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    // update product
-    Product updatedProduct = productService.updateProduct(id, product);
-
-    // return
-    return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
-  }
+//  @PutMapping("/products/{id}")
+//  public ResponseEntity<Product> updateProduct(
+//      @PathVariable(value = "id") int id,
+//      @RequestBody Product product
+//  ) {
+//    // validate
+//    if (!Validator.isNumber(id)) {
+//      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//    }
+//    if (findProductWithId(id) == null) {
+//      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//    }
+//
+//    // update product
+//    Product updatedProduct = productService.updateProduct(id, product);
+//
+//    // return
+//    return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
+//  }
 
   @GetMapping("/products/{id}")
-  public ResponseEntity<Product> findProductWithId(@PathVariable(value = "id") int id) {
-    // validate
-    if (!Validator.isNumber(id)) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
-    // find product with id
-    Product resultProduct = productService.findProductWithId(id);
+  public ResponseEntity<Product> findProductWithId(
+      @Valid @RequestBody FindProductReq findProductReq) {
+    ProductRes productRes = productService.findProductWithId(findProductReq);
 
     // return
     if (resultProduct == null) {

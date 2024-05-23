@@ -3,7 +3,6 @@ package smartstore.order;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import smartstore.products.Product;
-import smartstore.products.ProductRepository;
 
 @Service
 @AllArgsConstructor

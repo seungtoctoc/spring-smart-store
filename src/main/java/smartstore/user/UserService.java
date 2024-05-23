@@ -25,9 +25,9 @@ public class UserService {
       throw new IllegalStateException();
     }
 
-    User createdUser = userJPARepository.save(signUpReq.makeUser());
+    User savedUser = userJPARepository.save(signUpReq.makeUser());
 
-    return new SignUpRes(createdUser.getUserId(), createdUser.getNickname());
+    return new SignUpRes(savedUser.getId(), savedUser.getUserId(), savedUser.getNickname());
   }
 
   LogInRes login(LogInReq loginReq) {

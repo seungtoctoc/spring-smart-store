@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import smartstore.products.productDTO.FindProductsReq;
 import smartstore.products.productDTO.ProductReq;
 import smartstore.products.productDTO.ProductRes;
 
@@ -29,9 +28,8 @@ public class ProductService {
     return null;
   }
 
-  Page<Product> findProducts(FindProductsReq findProductsReq) {
-    PageRequest pageRequest = PageRequest.of(findProductsReq.getCurrent(),
-        findProductsReq.getLimit());
+  Page<Product> findProducts(int current, int limit) {
+    PageRequest pageRequest = PageRequest.of(current, limit);
     Page<Product> products = productJPARepository.findAll(pageRequest);
 
     if (products.getSize() == 0) {

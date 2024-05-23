@@ -1,6 +1,5 @@
 package smartstore.products;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -8,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import smartstore.products.productDTO.FindProductsReq;
 import smartstore.products.productDTO.ProductReq;
 import smartstore.products.productDTO.ProductRes;
 import smartstore.utility.ApiUtils;
@@ -69,11 +68,12 @@ public class ProductController {
 
   @GetMapping("/products")
   public ApiUtils.ApiResult<Object> findProducts(
-      @Valid @RequestBody FindProductsReq findProductsReq
+      @RequestParam int current,
+      @RequestParam int limit
   ) {
 
     try {
-      Page<Product> products = productService.findProducts(findProductsReq);
+      Page<Product> products = productService.findProducts(current, limit);
 
       return ApiUtils.success(products);
     } catch (IllegalStateException e) {

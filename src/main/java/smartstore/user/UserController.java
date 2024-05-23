@@ -2,9 +2,11 @@ package smartstore.user;
 
 import jakarta.validation.Valid;
 import java.util.InputMismatchException;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,9 +58,22 @@ public class UserController {
     }
   }
 
-//  @DeleteMapping("/user")
-//  public ApiUtils.ApiResult<Object> withdraw(@Valid @RequestBody WithdrawReq withdrawReq) {
-//
-//  }
+  @DeleteMapping("/user")
+  public ApiUtils.ApiResult<Object> withdraw(@Valid @RequestBody LogInReq logInReq) {
+    try {
+      Optional<User> deletedUser = userService.withdraw(logInReq);
+
+      if (deletedUser.isEmpty()) {
+        return ApiUtils.success("withdraw complete");
+      }
+      return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (IllegalStateException e) {
+      return ApiUtils.error(ApiUtils.makeMap("error", "check Id"),
+          HttpStatus.BAD_REQUEST);
+    } catch (InputMismatchException e) {
+      return ApiUtils.error(ApiUtils.makeMap("error", "check Password"),
+          HttpStatus.BAD_REQUEST);
+    }
+  }
 }
 

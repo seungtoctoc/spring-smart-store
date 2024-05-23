@@ -31,15 +31,16 @@ public class UserService {
 
   LogInRes login(LogInReq loginReq) {
     Optional<User> foundUser = findByIdAndPw(loginReq.getUserId(), loginReq.getPassword());
-    
+
     return foundUser.get().makeLogInRes();
   }
 
-//  Optional<User> withdraw(WithdrawReq withdrawReq) {
-//    Optional<User> foundUser = findByIdAndPw(withdrawReq.getUserId(), withdrawReq.getPassword());
-//
-//    // 여기부터 시작
-//  }
+  Optional<User> withdraw(LogInReq logInReq) {
+    Optional<User> userToWithdraw = findByIdAndPw(logInReq.getUserId(), logInReq.getPassword());
+    userJPARepository.deleteById(userToWithdraw.get().getId());
+    
+    return userJPARepository.findById(userToWithdraw.get().getId());
+  }
 
   Optional<User> findByIdAndPw(String userId, String password) {
     Optional<User> foundUser = userJPARepository.findByUserId(userId);

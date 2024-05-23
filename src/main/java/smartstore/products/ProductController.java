@@ -29,26 +29,6 @@ public class ProductController {
     return ApiUtils.success(productRes);
   }
 
-//  @PutMapping("/products/{id}")
-//  public ResponseEntity<Product> updateProduct(
-//      @PathVariable(value = "id") int id,
-//      @RequestBody Product product
-//  ) {
-//    // validate
-//    if (!Validator.isNumber(id)) {
-//      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
-//    if (findProductWithId(id) == null) {
-//      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
-//
-//    // update product
-//    Product updatedProduct = productService.updateProduct(id, product);
-//
-//    // return
-//    return new ResponseEntity<Product>(updatedProduct, HttpStatus.OK);
-//  }
-
   @GetMapping("/products/{id}")
   public ApiUtils.ApiResult<Object> findProductWithId(
       @PathVariable("id") int id) {
@@ -80,37 +60,4 @@ public class ProductController {
       return ApiUtils.error("not found", HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
-//  @PostMapping("/products/remove")
-//  public ResponseEntity removeProducts(
-//      @RequestBody Map<String, int[]> data
-//  ) {
-//    int[] productIds = data.get("productIds");
-//
-//    // validate
-//    if (productIds.length == 0) {
-//      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
-//
-//    // Remove
-//    for (int productId : productIds) {
-//      // validate
-//      if (findProductWithId(productId) == null) {
-//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//      }
-//
-//      // remove
-//      productService.removeProducts(productId);
-//    }
-//
-//    // validate
-//    for (int productId : productIds) {
-//      if (findProductWithId(productId) != null) {
-//        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//      }
-//    }
-//
-//    // return
-//    return new ResponseEntity<>(HttpStatus.OK);
-//  }
 }

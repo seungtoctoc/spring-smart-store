@@ -24,10 +24,6 @@ public class ProductService {
     return savedProduct.makeProductRes();
   }
 
-  Product updateProduct(int id, Product product) {
-    return null;
-  }
-
   Page<Product> findProducts(int current, int limit) {
     PageRequest pageRequest = PageRequest.of(current, limit);
     Page<Product> products = productJPARepository.findAll(pageRequest);
@@ -51,9 +47,5 @@ public class ProductService {
     }
 
     return foundProduct.get().makeProductRes();
-  }
-
-  void removeProducts(int productId) {
-
   }
 }

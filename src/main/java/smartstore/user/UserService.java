@@ -38,7 +38,7 @@ public class UserService {
   Optional<User> withdraw(LogInReq logInReq) {
     Optional<User> userToWithdraw = findByIdAndPw(logInReq.getUserId(), logInReq.getPassword());
     userJPARepository.deleteById(userToWithdraw.get().getId());
-    
+
     return userJPARepository.findById(userToWithdraw.get().getId());
   }
 
@@ -55,8 +55,6 @@ public class UserService {
 
     return foundUser;
   }
-
-
 }
 
 

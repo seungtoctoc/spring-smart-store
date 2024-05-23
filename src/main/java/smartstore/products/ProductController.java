@@ -5,10 +5,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import smartstore.products.productDTO.FindProductReq;
 import smartstore.products.productDTO.FindProductsReq;
 import smartstore.products.productDTO.ProductReq;
 import smartstore.products.productDTO.ProductRes;
@@ -52,16 +52,18 @@ public class ProductController {
 
   @GetMapping("/products/{id}")
   public ApiUtils.ApiResult<Object> findProductWithId(
-      @Valid @RequestBody FindProductReq findProductReq) {
-    try {
-      ProductRes productRes = productService.findProductWithId(findProductReq);
+      @PathVariable("id") int id) {
+    {
+      try {
+        ProductRes productRes = productService.findProductWithId(id);
 
-      if (productRes == null) {
-        return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
+        if (productRes == null) {
+          return ApiUtils.error("server error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ApiUtils.success(productRes);
+      } catch (IllegalStateException e) {
+        return ApiUtils.error("not found", HttpStatus.NOT_FOUND);
       }
-      return ApiUtils.success(productRes);
-    } catch (IllegalStateException e) {
-      return ApiUtils.error("not found", HttpStatus.NOT_FOUND);
     }
   }
 

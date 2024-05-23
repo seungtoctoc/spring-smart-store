@@ -17,13 +17,14 @@ public class Product {
 
   @Id
   private Integer id;
+
   private String name;
-  private String desc;
+  private String description;
   private int price;
   private int sellerId;
   private int categoryId;
 
   public ProductRes makeProductRes() {
-    return new ProductRes(id, name, desc, price, sellerId, categoryId);
+    return new ProductRes(name, description, price, sellerId, categoryId);
   }
 }

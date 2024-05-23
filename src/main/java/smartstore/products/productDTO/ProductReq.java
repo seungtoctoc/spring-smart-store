@@ -11,7 +11,7 @@ public class ProductReq {
   private String name;
 
   @NotBlank(message = "설명은 필수!")
-  private String desc;
+  private String description;
 
   @NotBlank(message = "가격은 필수!")
   private int price;
@@ -23,6 +23,6 @@ public class ProductReq {
   private int categoryId;
 
   public Product makeProduct() {
-    return new Product(0, name, desc, price, sellerId, categoryId);
+    return new Product(0, name, description, price, sellerId, categoryId);
   }
 }

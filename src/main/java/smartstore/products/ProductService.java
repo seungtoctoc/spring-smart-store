@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import smartstore.products.productDTO.FindProductReq;
 import smartstore.products.productDTO.FindProductsReq;
 import smartstore.products.productDTO.ProductReq;
 import smartstore.products.productDTO.ProductRes;
@@ -20,7 +19,8 @@ public class ProductService {
 
   @Transactional
   ProductRes saveProduct(ProductReq productReq) {
-    Product savedProduct = productJPARepository.save(productReq.makeProduct());
+    Product productToSave = productReq.makeProduct();
+    Product savedProduct = productJPARepository.save(productToSave);
 
     return savedProduct.makeProductRes();
   }
@@ -45,8 +45,8 @@ public class ProductService {
     return null;
   }
 
-  ProductRes findProductWithId(FindProductReq findProductReq) {
-    Optional<Product> foundProduct = productJPARepository.findById(findProductReq.getId());
+  ProductRes findProductWithId(int id) {
+    Optional<Product> foundProduct = productJPARepository.findById(id);
 
     if (foundProduct.isEmpty()) {
       throw new IllegalStateException();

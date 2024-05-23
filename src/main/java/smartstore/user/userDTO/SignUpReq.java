@@ -30,6 +30,6 @@ public class SignUpReq {
   private String contact;
 
   public User makeUser() {
-    return new User(null, userId, email, password, nickname, contact);
+    return new User(0, userId, email, password, nickname, contact);
   }
 }

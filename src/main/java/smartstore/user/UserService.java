@@ -26,13 +26,13 @@ public class UserService {
 
     User savedUser = userJPARepository.save(signUpReq.makeUser());
 
-    return new SignUpRes(savedUser.getId(), savedUser.getUserId(), savedUser.getNickname());
+    return savedUser.makeSignUpRes();
   }
 
   LogInRes login(LogInReq loginReq) {
     Optional<User> foundUser = findByIdAndPw(loginReq.getUserId(), loginReq.getPassword());
-
-    return new LogInRes(foundUser.get().getUserId(), foundUser.get().getNickname());
+    
+    return foundUser.get().makeLogInRes();
   }
 
 //  Optional<User> withdraw(WithdrawReq withdrawReq) {

@@ -9,7 +9,6 @@ import smartstore.user.userDTO.LogInReq;
 import smartstore.user.userDTO.LogInRes;
 import smartstore.user.userDTO.SignUpReq;
 import smartstore.user.userDTO.SignUpRes;
-import smartstore.user.userDTO.WithdrawReq;
 
 @Service
 @AllArgsConstructor
@@ -36,11 +35,11 @@ public class UserService {
     return new LogInRes(foundUser.get().getUserId(), foundUser.get().getNickname());
   }
 
-  Optional<User> withdraw(WithdrawReq withdrawReq) {
-    Optional<User> foundUser = findByIdAndPw(withdrawReq.getUserId(), withdrawReq.getPassword());
-
-    // 여기부터 시작
-  }
+//  Optional<User> withdraw(WithdrawReq withdrawReq) {
+//    Optional<User> foundUser = findByIdAndPw(withdrawReq.getUserId(), withdrawReq.getPassword());
+//
+//    // 여기부터 시작
+//  }
 
   Optional<User> findByIdAndPw(String userId, String password) {
     Optional<User> foundUser = userJPARepository.findByUserId(userId);

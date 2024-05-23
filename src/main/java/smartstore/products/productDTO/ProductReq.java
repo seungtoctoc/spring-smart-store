@@ -23,6 +23,6 @@ public class ProductReq {
   private int categoryId;
 
   public Product makeProduct() {
-    return new Product(null, name, desc, price, sellerId, categoryId);
+    return new Product(0, name, desc, price, sellerId, categoryId);
   }
 }
